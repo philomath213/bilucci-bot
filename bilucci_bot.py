@@ -1,3 +1,4 @@
+import os
 import logging
 from random import choice
 
@@ -7,8 +8,8 @@ from telegram.ext import (
 )
 
 
-# BOT API key
-API_KEY = ""
+# BOT_API_TOKEN
+BOT_API_TOKEN = os.environ.get("BOT_API_TOKEN", None)
 
 # Spoils list
 SPOILS = [
@@ -47,7 +48,7 @@ def main():
         level=logging.INFO
     )
 
-    updater = Updater(token=API_KEY, use_context=True)
+    updater = Updater(token=BOT_API_TOKEN, use_context=True)
     dispatcher = updater.dispatcher
 
     start_spoiling_handler = CommandHandler('start_spoiling', start_spoiling)
