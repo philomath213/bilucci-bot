@@ -11,7 +11,9 @@ from telegram.ext import (
 API_KEY = ""
 
 # Spoils list
-SPOILS = []
+SPOILS = [
+    "No spoilers for the moment"
+]
 
 # Quotes list
 QUOTES = [
