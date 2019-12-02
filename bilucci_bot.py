@@ -9,10 +9,17 @@ from telegram.ext import (
 
 import datamuse
 
+import omdb
+
 
 # BOT_API_TOKEN
 BOT_API_TOKEN = os.environ.get("BOT_API_TOKEN", None)
 
+# omdb API KEY
+OMDB_API_KEY = os.environ.get("OMDB_API_KEY", None)
+
+# setup 3rd party APIs
+omdb.set_default('apikey', OMDB_API_KEY)
 datamuse_api = datamuse.Datamuse()
 
 logging.basicConfig(
@@ -119,6 +126,37 @@ def esi_cinema(update, context):
     logger.info(f"esi_cinema: {esi_cinema_msg}")
 
 
+def what_movie(update, context):
+    user = update.effective_user
+
+    if context.args:
+        title = ' '.join(context.args).strip()
+        logger.info(f"{user.username} triggers what_movie: {title}")
+
+        movie_info = omdb.request(t=title)
+        if movie_info:
+            msg = ""
+            for x, y in movie_info.json().items():
+                if x == 'Ratings':
+                    ratings = "Ratings:\n"
+                    for r in y:
+                        ratings += f"    {r['Source']}: {r['Value']}\n"
+                    msg += ratings
+                else:
+                    msg += f"{x}: {y}\n"
+        else:
+            msg = f"can't find movie {title}"
+    else:
+        msg = "/what_movie <title>"
+
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=msg
+    )
+
+    logger.info("what_movie: %r" % msg)
+
+
 def help_cmd(update, context):
     text = "The following commands are available:\n"
 
@@ -128,7 +166,8 @@ def help_cmd(update, context):
         ["/synonyms <word>", "Get list of Synonyms for word"],
         ["/good_night", "Say Good Night"],
         ["/esi_cinema", "Show ESI Cinema next Movie"],
-        ["/help", "Get this message"]
+        ["/help", "Get this message"],
+        ["/what_movie", "Get informations about that movie"]
     ]
 
     for command in commands:
@@ -167,6 +206,10 @@ def main():
     esi_cinema_handler = CommandHandler('esi_cinema', esi_cinema)
     dispatcher.add_handler(esi_cinema_handler)
     logger.info("add 'esi_cinema' handler")
+
+    what_movie_handler = CommandHandler('what_movie', what_movie)
+    dispatcher.add_handler(what_movie_handler)
+    logger.info("add 'what_movie' handler")
 
     updater.start_polling()
 
