@@ -46,6 +46,7 @@ ESI_CINAME_MSG = [
     "In this week's ESI Cinema we will watch:\nThe Irishman (2019) • Movie \n3h29min ⭐️8.7 IMDB\n\nDirector: Martin Scorsese\nActors: Robert De Niro, Al Pacino, Anna Paquin, Jesse Plemons\nGenres: Biography, 🔪 Crime, 🎭 Drama\nThe Irishman is a movie starring Robert De Niro, Al Pacino, and Anna Paquin. A mob hitman recalls his possible involvement with the slaying of Jimmy Hoffa."
 ]
 
+
 def start_spoiling(update, context):
     user = update.effective_user
     logger.info(f"{user.username} triggers start_spoiling")
@@ -118,9 +119,34 @@ def esi_cinema(update, context):
     logger.info(f"esi_cinema: {esi_cinema_msg}")
 
 
+def help_cmd(update, context):
+    text = "The following commands are available:\n"
+
+    commands = [
+        ["/start_spoiling", "Start spoiling"],
+        ["/gimme_quote", "Get a randome quote"],
+        ["/synonyms <word>", "Get list of Synonyms for word"],
+        ["/good_night", "Say Good Night"],
+        ["/esi_cinema", "Show ESI Cinema next Movie"],
+        ["/help", "Get this message"]
+    ]
+
+    for command in commands:
+        text += command[0] + " " + command[1] + "\n"
+
+    context.bot.send_message(
+        chat_id=update.message.chat_id,
+        text=text
+    )
+
+
 def main():
     updater = Updater(token=BOT_API_TOKEN, use_context=True)
     dispatcher = updater.dispatcher
+
+    help_cmd_handler = CommandHandler('help', help_cmd)
+    dispatcher.add_handler(help_cmd_handler)
+    logger.info("add 'help_cmd' handler")
 
     start_spoiling_handler = CommandHandler('start_spoiling', start_spoiling)
     dispatcher.add_handler(start_spoiling_handler)
