@@ -37,6 +37,11 @@ QUOTES = [
 ]
 
 
+GOOD_NIGHT_MSG = [
+    "Good Night Alphabit Family",
+]
+
+
 def start_spoiling(update, context):
     user = update.effective_user
     logger.info(f"{user.username} triggers start_spoiling")
@@ -85,6 +90,18 @@ def synonyms(update, context):
     logger.info("synonyms: %r" % msg)
 
 
+def good_night(update, context):
+    user = update.effective_user
+    logger.info(f"{user.username} triggers good_night")
+
+    good_night_msg = choice(GOOD_NIGHT_MSG)
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=good_night_msg
+    )
+    logger.info(f"good_night: {good_night_msg}")
+
+
 def main():
     updater = Updater(token=BOT_API_TOKEN, use_context=True)
     dispatcher = updater.dispatcher
@@ -100,6 +117,10 @@ def main():
     synonyms_handler = CommandHandler('synonyms', synonyms)
     dispatcher.add_handler(synonyms_handler)
     logger.info("add 'synonyms' handler")
+
+    good_night_handler = CommandHandler('good_night', good_night)
+    dispatcher.add_handler(good_night_handler)
+    logger.info("add 'good_night' handler")
 
     updater.start_polling()
 
