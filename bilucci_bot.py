@@ -42,6 +42,10 @@ GOOD_NIGHT_MSG = [
 ]
 
 
+ESI_CINAME_MSG = [
+    "In this week's ESI Cinema we will watch:\nThe Irishman (2019) • Movie \n3h29min ⭐️8.7 IMDB\n\nDirector: Martin Scorsese\nActors: Robert De Niro, Al Pacino, Anna Paquin, Jesse Plemons\nGenres: Biography, 🔪 Crime, 🎭 Drama\nThe Irishman is a movie starring Robert De Niro, Al Pacino, and Anna Paquin. A mob hitman recalls his possible involvement with the slaying of Jimmy Hoffa."
+]
+
 def start_spoiling(update, context):
     user = update.effective_user
     logger.info(f"{user.username} triggers start_spoiling")
@@ -102,6 +106,18 @@ def good_night(update, context):
     logger.info(f"good_night: {good_night_msg}")
 
 
+def esi_cinema(update, context):
+    user = update.effective_user
+    logger.info(f"{user.username} triggers esi_cinema")
+
+    esi_cinema_msg = choice(ESI_CINAME_MSG)
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=esi_cinema_msg
+    )
+    logger.info(f"esi_cinema: {esi_cinema_msg}")
+
+
 def main():
     updater = Updater(token=BOT_API_TOKEN, use_context=True)
     dispatcher = updater.dispatcher
@@ -121,6 +137,10 @@ def main():
     good_night_handler = CommandHandler('good_night', good_night)
     dispatcher.add_handler(good_night_handler)
     logger.info("add 'good_night' handler")
+
+    esi_cinema_handler = CommandHandler('esi_cinema', esi_cinema)
+    dispatcher.add_handler(esi_cinema_handler)
+    logger.info("add 'esi_cinema' handler")
 
     updater.start_polling()
 
