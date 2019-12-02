@@ -166,8 +166,8 @@ def help_cmd(update, context):
         ["/synonyms <word>", "Get list of Synonyms for word"],
         ["/good_night", "Say Good Night"],
         ["/esi_cinema", "Show ESI Cinema next Movie"],
+        ["/what_movie", "Get informations about that movie"],
         ["/help", "Get this message"],
-        ["/what_movie", "Get informations about that movie"]
     ]
 
     for command in commands:
