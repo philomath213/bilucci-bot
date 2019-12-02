@@ -9,9 +9,15 @@ from telegram.ext import (
 
 import datamuse
 
+import omdb
+
 
 # BOT_API_TOKEN
 BOT_API_TOKEN = os.environ.get("BOT_API_TOKEN", None)
+
+# omdb api key
+omdb.set_default('apikey', '1b7efab5')
+
 
 datamuse_api = datamuse.Datamuse()
 
@@ -118,6 +124,29 @@ def esi_cinema(update, context):
     )
     logger.info(f"esi_cinema: {esi_cinema_msg}")
 
+def what_movie(update,context):
+    user = update.effective_user
+
+    if context.args:
+        title = context.args[0].strip()
+        logger.info(f"{user.username} triggers what_movie: {title}")
+
+        m=omdb.request(t=title)
+        if m:
+            movie = '\n'.join(map(lambda s: s['title'], m.text))
+        else:
+            movie = f"can't find movie {title}"
+    else:
+        movie = "/what_movie <title>"
+
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=movie
+    )
+
+    logger.info("what_movie: %r" % movie)
+
+
 
 def help_cmd(update, context):
     text = "The following commands are available:\n"
@@ -128,7 +157,8 @@ def help_cmd(update, context):
         ["/synonyms <word>", "Get list of Synonyms for word"],
         ["/good_night", "Say Good Night"],
         ["/esi_cinema", "Show ESI Cinema next Movie"],
-        ["/help", "Get this message"]
+        ["/help", "Get this message"],
+        ["/what_movie", "Get informations about that movie"]
     ]
 
     for command in commands:
@@ -167,6 +197,10 @@ def main():
     esi_cinema_handler = CommandHandler('esi_cinema', esi_cinema)
     dispatcher.add_handler(esi_cinema_handler)
     logger.info("add 'esi_cinema' handler")
+
+    what_movie_handler = CommandHandler('what_movie', what_movie)
+    dispatcher.add_handler(what_movie_handler)
+    logger.info("add 'what_movie' handler")
 
     updater.start_polling()
 
