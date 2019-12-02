@@ -15,10 +15,11 @@ import omdb
 # BOT_API_TOKEN
 BOT_API_TOKEN = os.environ.get("BOT_API_TOKEN", None)
 
-# omdb api key
-omdb.set_default('apikey', '1b7efab5')
+# omdb API KEY
+OMDB_API_KEY = os.environ.get("OMDB_API_KEY", None)
 
-
+# setup 3rd party APIs
+omdb.set_default('apikey', OMDB_API_KEY)
 datamuse_api = datamuse.Datamuse()
 
 logging.basicConfig(
