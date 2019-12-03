@@ -12,8 +12,14 @@ import datamuse
 import omdb
 
 
+# PORT
+PORT = int(os.environ.get('PORT', '8443'))
+# Heroku Application Name
+APP_NAME = os.environ.get('APP_NAME', None)
 # BOT_API_TOKEN
 BOT_API_TOKEN = os.environ.get("BOT_API_TOKEN", None)
+
+WEBHOOK_URL = f"https://{APP_NAME}.herokuapp.com/{BOT_API_TOKEN}"
 
 # omdb API KEY
 OMDB_API_KEY = os.environ.get("OMDB_API_KEY", None)
@@ -211,7 +217,14 @@ def main():
     dispatcher.add_handler(what_movie_handler)
     logger.info("add 'what_movie' handler")
 
-    updater.start_polling()
+    logger.info(f"PORT: {PORT}")
+    logger.info(f"WEBHOOK_URL: {WEBHOOK_URL}")
+
+    updater.start_webhook(listen="0.0.0.0",
+                          port=PORT,
+                          url_path=BOT_API_TOKEN)
+    updater.bot.set_webhook(WEBHOOK_URL)
+    updater.idle()
 
 
 if __name__ == "__main__":
