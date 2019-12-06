@@ -50,8 +50,13 @@ QUOTES = [
 ]
 
 
-GOOD_NIGHT_MSG = [
+GOOD_NIGHT_ALPHABIT_MSG = [
     "Good Night Alphabit Family",
+]
+
+
+GOOD_NIGHT_INGENIUMS_MSG = [
+    "Good Night Ingeniums Family",
 ]
 
 
@@ -108,16 +113,28 @@ def synonyms(update, context):
     logger.info("synonyms: %r" % msg)
 
 
-def good_night(update, context):
+def good_night_alphabit(update, context):
     user = update.effective_user
     logger.info(f"{user.username} triggers good_night")
 
-    good_night_msg = choice(GOOD_NIGHT_MSG)
+    good_night_msg = choice(GOOD_NIGHT_ALPHABIT_MSG)
     context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=good_night_msg
     )
-    logger.info(f"good_night: {good_night_msg}")
+    logger.info(f"good_night_alphabit: {good_night_msg}")
+
+
+def good_night_ingeniums(update, context):
+    user = update.effective_user
+    logger.info(f"{user.username} triggers good_night")
+
+    good_night_msg = choice(GOOD_NIGHT_INGENIUMS_MSG)
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=good_night_msg
+    )
+    logger.info(f"good_night_ingeniums: {good_night_msg}")
 
 
 def esi_cinema(update, context):
@@ -205,9 +222,13 @@ def main():
     dispatcher.add_handler(synonyms_handler)
     logger.info("add 'synonyms' handler")
 
-    good_night_handler = CommandHandler('good_night', good_night)
-    dispatcher.add_handler(good_night_handler)
-    logger.info("add 'good_night' handler")
+    good_night_alphabit_handler = CommandHandler('good_night_alphabit', good_night_alphabit)
+    dispatcher.add_handler(good_night_alphabit_handler)
+    logger.info("add 'good_night_alphabit' handler")
+
+    good_night_ingeniums_handler = CommandHandler('good_night_ingeniums', good_night_ingeniums)
+    dispatcher.add_handler(good_night_ingeniums_handler)
+    logger.info("add 'good_night_ingeniums' handler")
 
     esi_cinema_handler = CommandHandler('esi_cinema', esi_cinema)
     dispatcher.add_handler(esi_cinema_handler)
