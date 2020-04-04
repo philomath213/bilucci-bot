@@ -1,6 +1,8 @@
 import os
 import logging
 from random import choice
+import json
+
 
 from telegram.ext import (
     Updater,
@@ -64,12 +66,28 @@ ESI_CINAME_MSG = [
     "In this week's ESI Cinema we will watch:\nThe Irishman (2019) • Movie \n3h29min ⭐️8.7 IMDB\n\nDirector: Martin Scorsese\nActors: Robert De Niro, Al Pacino, Anna Paquin, Jesse Plemons\nGenres: Biography, 🔪 Crime, 🎭 Drama\nThe Irishman is a movie starring Robert De Niro, Al Pacino, and Anna Paquin. A mob hitman recalls his possible involvement with the slaying of Jimmy Hoffa."
 ]
 
+# function to get a random movie spoiler each time called
+
+
+def getSpoil():
+    spoilerFile = open('spoils.txt', 'r')
+    spoils = json.load(spoilerFile)
+    movies = spoils['movies']
+    chosen = choice(movies)
+    spoilers = chosen['spoilers']
+    text = 'Title: ' + chosen['name']
+
+    for item in spoilers:
+        text += '\n' + "- " + item.get('value')
+
+    return text
+
 
 def start_spoiling(update, context):
     user = update.effective_user
     logger.info(f"{user.username} triggers start_spoiling")
 
-    spoil = choice(SPOILS)
+    spoil = getSpoil()
     context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=spoil
@@ -223,11 +241,13 @@ def main():
     dispatcher.add_handler(synonyms_handler)
     logger.info("add 'synonyms' handler")
 
-    good_night_alphabit_handler = CommandHandler('good_night_alphabit', good_night_alphabit)
+    good_night_alphabit_handler = CommandHandler(
+        'good_night_alphabit', good_night_alphabit)
     dispatcher.add_handler(good_night_alphabit_handler)
     logger.info("add 'good_night_alphabit' handler")
 
-    good_night_ingeniums_handler = CommandHandler('good_night_ingeniums', good_night_ingeniums)
+    good_night_ingeniums_handler = CommandHandler(
+        'good_night_ingeniums', good_night_ingeniums)
     dispatcher.add_handler(good_night_ingeniums_handler)
     logger.info("add 'good_night_ingeniums' handler")
 
