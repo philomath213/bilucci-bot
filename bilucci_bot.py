@@ -37,10 +37,6 @@ logging.basicConfig(
 
 logger = logging.getLogger()
 
-# Spoils list
-SPOILS = [
-    "No spoilers for the moment"
-]
 
 # Quotes list
 QUOTES = [
