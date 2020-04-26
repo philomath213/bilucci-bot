@@ -1,7 +1,16 @@
 import setuptools
+import os
+
+
+def read(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
+
+
+requirements = read("requirements.txt").split()
 
 setuptools.setup(
     name="bilucci",
@@ -13,6 +22,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/philomath213/bilucci-bot",
     packages=setuptools.find_packages(),
+    install_requires=requirements,
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
