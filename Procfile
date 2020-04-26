@@ -1,1 +1,1 @@
-web: python bilucci_bot.py
+web: python -m bilucci
